@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="https://github.com/ssoom98/where2go/issues/1#issue-3215528193)" alt="where2go 로고" width="200"/>
-</p>
+![where2go로고](https://github.com/ssoom98/where2go/issues/1#issue-3215528193)
 “여행 행동 데이터로 떠나는 인사이트 여행, where2go”
  # 📚 SKIL
  ### Programming

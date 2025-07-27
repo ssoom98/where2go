@@ -28,8 +28,8 @@ def build_code_dicts(code_b):
 def map_codes(df, mapping_plan, code_dicts):
     for col, code_key in mapping_plan.items():
         if col not in df.columns:
-            print(f"컬럼 '{col}'이 DataFrame에 존재하지 않습니다. 건너뜁니다.")
-            continue
+                print(f"'{df}',컬럼 '{col}'이 DataFrame에 존재하지 않습니다. 건너뜁니다.")
+                continue
         try:
             df[col] = pd.to_numeric(df[col], errors='coerce').astype('Int64')
             df[col] = df[col].map(code_dicts.get(code_key, {}))

@@ -40,25 +40,34 @@ def map_codes(df, mapping_plan, code_dicts):
 def rename_columns(df, rename_map):
     return df.rename(columns=rename_map)
 
-def preprocess_data(master_input, mapping_plan, rename_map, output_filename=None):
+
+def preprocess_data(master_input, mapping_plan, rename_map, output_filename, region="east"):
     """
     Parameters:
     - master_input (str or DataFrame): 마스터 데이터 (경로 또는 DataFrame)
     - mapping_plan (dict): 컬럼별 코드 매핑 dict
     - rename_map (dict): 컬럼명 변경 dict
-    - output_filename (str, optional): 저장할 파일 이름 (확장자 포함)
+    - output_filename (str): 저장할 파일 이름 (확장자 포함)
+    - region (str): 지역 이름 (예: 'east', 'jeju' 등)
 
     Returns:
     - df (pd.DataFrame): 전처리된 결과
     """
-    # ✅ 사용자 홈 디렉토리 기준 base dir 자동 설정
+    if not output_filename:
+        raise ValueError("output_filename은 필수 인자입니다.")
+
+    # ✅ BASE_DIR 자동 설정
     HOME = os.path.expanduser("~")
-    BASE_DIR = os.path.join(HOME, "Desktop/miniproject/where2go/data/east")
-    
+    BASE_DIR = os.path.join(HOME, f"Desktop/miniproject/where2go/data/{region}")
+
     # ✅ 코드 파일 경로 정의
     code_a_path = os.path.join(BASE_DIR, "TL_csv/tc_codea_코드A.csv")
+    if not os.path.exists(code_a_path):
+        code_a_path = os.path.join(BASE_DIR, "TS_csv/tc_codea_코드A.csv")
+        
     code_b_path = os.path.join(BASE_DIR, "TL_csv/tc_codeb_코드B.csv")
-
+    if not os.path.exists(code_b_path):
+        code_b_path = os.path.join(BASE_DIR, "TS_csv/tc_codeb_코드B.csv")
     # 1. Load
     df, code_a, code_b = load_data(master_input, code_a_path, code_b_path)
 
@@ -71,9 +80,8 @@ def preprocess_data(master_input, mapping_plan, rename_map, output_filename=None
     # 4. Rename columns
     df = rename_columns(df, rename_map)
 
-    # 5. Save if needed
-    if output_filename:
-        output_path = os.path.join(BASE_DIR, output_filename)
-        df.to_csv(output_path, index=False, encoding='utf-8')
+    # 5. Save to output path
+    output_path = os.path.join(BASE_DIR, output_filename)
+    df.to_csv(output_path, index=False, encoding='utf-8')
 
     return df
